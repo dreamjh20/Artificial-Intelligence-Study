@@ -1,0 +1,90 @@
+Basic
+
+Python 3.8.5 (tags/v3.8.5:580fbb0, Jul 20 2020, 15:57:54) [MSC v.1924 64 bit (AMD64)] on win32
+Type "help", "copyright", "credits" or "license" for more information.
+>>> a = 1
+>>> b = 4
+>>> a*b-a
+3
+>>> a = "python"
+>>> print(a)
+python
+>>> print('a')
+a
+>>> print("a")
+a
+>>> a = 'puashd'
+>>> print(a)
+puashd
+>>> a = asfkj
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+NameError: name 'asfkj' is not defined
+>>> a = (Asd)
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+NameError: name 'Asd' is not defined
+>>> a = "(asdf)"
+>>> print(A)
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+NameError: name 'A' is not defined
+>>> print(a)
+(asdf)
+>>> a
+'(asdf)'
+>>> a
+'(asdf)'
+>>> a = 4
+>>> if a > 1:
+... print("adsf)
+  File "<stdin>", line 2
+    print("adsf)
+    ^
+IndentationError: expected an indented block
+>>>
+>>> a = 2
+>>> if a < 4
+  File "<stdin>", line 1
+    if a < 4
+           ^
+SyntaxError: invalid syntax
+>>> if a < 4:
+... print("Aasdf")
+  File "<stdin>", line 2
+    print("Aasdf")
+    ^
+IndentationError: expected an indented block
+>>> a = 3
+>>> if a > 1:
+... print("A is 1")
+  File "<stdin>", line 2
+    print("A is 1")
+    ^
+IndentationError: expected an indented block
+>>> if a>1:print("Asdfas")
+...
+Asdfas
+>>>
+>>> if a>2:
+...     print("a")
+...
+a
+>>>
+>>> def rino(a, b)
+  File "<stdin>", line 1
+    def rino(a, b)
+                 ^
+SyntaxError: invalid syntax
+>>> def rino(a, b):
+... return a+b
+  File "<stdin>", line 2
+    return a+b
+    ^
+IndentationError: expected an indented block
+>>> def rino(a, b):
+...     return a + b
+...
+>>> rino(2, 4)
+6
+>>>
