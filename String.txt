@@ -1,0 +1,116 @@
+Python 3.8.5 (tags/v3.8.5:580fbb0, Jul 20 2020, 15:57:54) [MSC v.1924 64 bit (AMD64)] on win32
+Type "help", "copyright", "credits" or "license" for more information.
+>>> a = 4.24E10
+>>> a
+42400000000.0
+>>> 0
+0
+>>> a = 0o177
+>>> a
+127
+>>> a = 0O11
+>>> a
+9
+>>> a = 0x1
+>>> a
+1
+>>> a = 0xA
+>>> a
+10
+>>> a = 0xA1
+>>> a
+161
+>>> a = 3
+>>> a ** 1
+3
+>>> a ** 2
+9
+>>> a ** 3
+27
+>>> 3/2
+1.5
+>>> 3//2
+1
+>>> 4//3
+1
+>>> 5//2
+2
+>>> 5/2
+2.5
+>>> a = """HI
+... a = """HI
+  File "<stdin>", line 2
+    a = """HI
+a = """HI
+           ^
+SyntaxError: invalid syntax
+>>> a = """
+... Hi
+... I 'm
+... """
+>>> a
+"\nHi\nI 'm\n"
+>>> a = """
+... Hi i'm
+... """
+>>> a
+"\nHi i'm\n"
+>>> a = """
+... hi
+... aasd
+... i'm \a
+... \a js \a
+...
+... ad
+... """
+>>> a
+"\nhi\naasd\ni'm \x07\n\x07 js \x07\n\nad\n"
+>>> head = "Python"
+>>> body = "is"
+>>> tail = 'Moonvdly_
+  File "<stdin>", line 1
+    tail = 'Moonvdly_
+                    ^
+SyntaxError: EOL while scanning string literal
+>>> tail = 'Moonvely_i'
+>>> head + body + tail
+'PythonisMoonvely_i'
+>>> a = "Moonvely_i"
+>>> a*2
+'Moonvely_iMoonvely_i'
+>>> a = "Moonvely_i\n"
+>>> a*3
+'Moonvely_i\nMoonvely_i\nMoonvely_i\n'
+>>> a = "Moonvely_i "
+>>> a * 3
+'Moonvely_i Moonvely_i Moonvely_i '
+>>> print("=|" * 10)
+=|=|=|=|=|=|=|=|=|=|
+>>> print("Moonvely_i")
+Moonvely_i
+>>> len(head)
+6
+>>> len(body)
+2
+>>> len(tail)
+10
+>>> a = "Hi I'm Moon"
+>>> a[0:6]
+"Hi I'm"
+>>> a[5:6
+... a
+  File "<stdin>", line 2
+    a
+    ^
+SyntaxError: invalid syntax
+>>> a[5:6]
+'m'
+>>> a[2:7]
+" I'm "
+>>> a[3:]
+"I'm Moon"
+>>> a[1:]
+"i I'm Moon"
+>>> a[2]
+' '
+>>>
