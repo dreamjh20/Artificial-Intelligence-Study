@@ -1,0 +1,37 @@
+Python 3.8.5 (tags/v3.8.5:580fbb0, Jul 20 2020, 15:57:54) [MSC v.1924 64 bit (AMD64)] on win32
+Type "help", "copyright", "credits" or "license" for more information.
+>>> abs(3)
+3
+>>> abs(-2)
+2
+>>> a = 4
+>>> abs(a)
+4
+>>> a = -4
+>>> abs(a)
+4
+>>>
+>>> b = 4
+>>> abs(a, b)
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+TypeError: abs() takes exactly one argument (2 given)
+>>> abs(1.2)
+1.2
+>>> abs(-1.2
+...
+... )
+1.2
+>>> def asdf(num):
+... return abs(num)
+  File "<stdin>", line 2
+    return abs(num)
+    ^
+IndentationError: expected an indented block
+>>> def asdf(num):
+...     return abs(num)
+...
+>>> a = -2.2
+>>> asdf(a)
+2.2
+>>>
