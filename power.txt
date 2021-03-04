@@ -1,0 +1,4 @@
+mul = 0
+while mul <= 10:
+    print("2^%d = %d" %(mul, 2**mul))
+    mul += 1
