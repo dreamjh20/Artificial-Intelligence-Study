@@ -1,0 +1,4 @@
+numbers = [2, 3, 5, 7, 11, 13, 17, 19]요.
+
+numbers.reverse()
+print("뒤집어진 리스트: " + str(numbers))
