@@ -1,7 +1,17 @@
 def is_palindrome(word):
     # 코드를 입력하세요.
     i = 0
-    for i in len(word):
+    C = 0
+    while i < len(word):
+        if word[i] != word[len(word)-i -1]:
+            C = 1
+            
+        i += 1
+            
+    if C == 1:
+        print("False")
+    else:
+        print("true")
         
 # 테스트
 print(is_palindrome("racecar"))
