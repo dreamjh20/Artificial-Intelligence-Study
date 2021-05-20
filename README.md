@@ -1,4 +1,3 @@
 # Artificial-Intelligence-Study
 
-Let's Begin with
-args
+Let's Begin
