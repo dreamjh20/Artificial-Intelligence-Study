@@ -1,0 +1,147 @@
+// Express Setup
+const express = require('express');
+const app = express();
+
+var bodyParser = require('body-parser');
+
+// server setting values
+const PORT = 8800;
+const HOST = "0.0.0.0";
+
+ // Hyperledger Bridge
+ const { FileSystemWallet, Gateway } = require('fabric-network');
+ const fs = require('fs');
+ const path = require('path');
+ const ccpPath = path.resolve(__dirname, '..','..','basic-network','connection.json');
+ const ccpJSON = fs.readFileSync(ccpPath, 'utf8');
+ const ccp = JSON.parse(ccpJSON);
+ const walletPath = path.join(process.cwd(), 'wallet');
+ const wallet = new FileSystemWallet(walletPath);
+
+app.use(express.static(path.join(__dirname,'views')));
+app.use(bodyParser.urlencoded({extended:false}))
+
+
+// indext page
+
+app.get('/',function(req, res){
+
+    res.sendFile(__dirname+'/views/index.html');
+});
+
+// POST : /set
+app.post('/set',async function(req, res){
+
+    const id = req.body.id;
+    const setdata = req.body.setdata;
+
+    const userExists = await wallet.exists('user1');
+    if (!userExists) {
+        console.log('An identity for the user "user1" does not exist in the wallet');
+        console.log('Run the registerUser.js application before retrying');
+        return;
+    }
+
+    // Create a new gateway for connecting to our peer node.
+    const gateway = new Gateway();
+    await gateway.connect(ccp, { wallet, identity: 'user1', discovery: { enabled: false } });
+
+    // Get the network (channel) our contract is deployed to.
+    const network = await gateway.getNetwork('mychannel');
+
+    // Get the contract from the network.
+    const contract = network.getContract('myfirstcc');
+
+    // 체인코드 호출!!
+    const result = await contract.submitTransaction("set",id,setdata);
+
+    res.status(200).send(result)     
+});
+
+// GET : /get
+app.get('/get',async function(req, res){
+
+    const id = req.query.id;
+    
+    const userExists = await wallet.exists('user1');
+    if (!userExists) {
+        console.log('An identity for the user "user1" does not exist in the wallet');
+        console.log('Run the registerUser.js application before retrying');
+        return;
+    }
+
+    // Create a new gateway for connecting to our peer node.
+    const gateway = new Gateway();
+    await gateway.connect(ccp, { wallet, identity: 'user1', discovery: { enabled: false } });
+
+    // Get the network (channel) our contract is deployed to.
+    const network = await gateway.getNetwork('mychannel');
+
+    // Get the contract from the network.
+    const contract = network.getContract('myfirstcc');
+
+    // 체인코드 호출!!
+    const result = await contract.evaluateTransaction("get",id);
+
+    res.status(200).send(result)    
+});
+
+// GET : /getAll
+app.get('/getAll',async function(req, res){
+
+    const userExists = await wallet.exists('user1');
+    if (!userExists) {
+        console.log('An identity for the user "user1" does not exist in the wallet');
+        console.log('Run the registerUser.js application before retrying');
+        return;
+    }
+
+    // Create a new gateway for connecting to our peer node.
+    const gateway = new Gateway();
+    await gateway.connect(ccp, { wallet, identity: 'user1', discovery: { enabled: false } });
+
+    // Get the network (channel) our contract is deployed to.
+    const network = await gateway.getNetwork('mychannel');
+
+    // Get the contract from the network.
+    const contract = network.getContract('myfirstcc');
+
+    // 체인코드 호출!!
+    const result = await contract.evaluateTransaction("getAllKeys");
+
+    res.status(200).send(result)  
+
+    
+});
+
+// GET : /getHistory
+app.get('/getHistory',async function(req, res){
+
+    const id = req.query.id;
+
+    const userExists = await wallet.exists('user1');
+    if (!userExists) {
+        console.log('An identity for the user "user1" does not exist in the wallet');
+        console.log('Run the registerUser.js application before retrying');
+        return;
+    }
+
+    // Create a new gateway for connecting to our peer node.
+    const gateway = new Gateway();
+    await gateway.connect(ccp, { wallet, identity: 'user1', discovery: { enabled: false } });
+
+    // Get the network (channel) our contract is deployed to.
+    const network = await gateway.getNetwork('mychannel');
+
+    // Get the contract from the network.
+    const contract = network.getContract('myfirstcc');
+
+    // 체인코드 호출!!
+    const result = await contract.evaluateTransaction("getHistoryForKey",id);
+
+    res.status(200).send(result)     
+});
+
+
+app.listen(PORT, HOST);
+console.log(`Running on http://${HOST}:${PORT}`)
