@@ -105,7 +105,7 @@
         //히스토리 조회하기 버튼 입력시
         $("#get-hbtn").click(()=>{         
             const id = $("#gethid").val();
-            $.get("/getHistory",(data,status)=>{
+            $.get("/getHistory",{id:id},(data,status)=>{
                 if (status == "success"){
                     $("#getH-alert").empty()
                     $("#getH-alert").append(data)
