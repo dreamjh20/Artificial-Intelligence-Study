@@ -1,0 +1,188 @@
+package main
+
+import (
+	"bytes"
+	"encoding/json"
+	"fmt"
+	"strconv"
+	"time"
+
+	"github.com/hyperledger/fabric/core/chaincode/shim"
+	"github.com/hyperledger/fabric/protos/peer"
+)
+
+type SimpleAsset struct {
+}
+
+type Data struct {
+	Key   string `json:"key"`
+	Value string `json:"value"`
+}
+
+func (t *SimpleAsset) Init(stub shim.ChaincodeStubInterface) peer.Response {
+	return shim.Success(nil)
+}
+
+func (t *SimpleAsset) Invoke(stub shim.ChaincodeStubInterface) peer.Response {
+
+	fn, args := stub.GetFunctionAndParameters()
+
+	var result string
+	var err error
+
+	if fn == "get" {
+		// get 함수 호출하기
+		result, err = get(stub, args)
+	} else if fn == "set" {
+		// set 함수 호출하기
+		result, err = set(stub, args)
+	} else if fn == "getAllKeys" {
+		// getAllKeys 함수 호출하기
+		result, err = getAllKeys(stub, args)
+	} else if fn == "getHistoryForKey" {
+		// getAllKeys 함수 호출하기
+		result, err = getHistoryForKey(stub, args)
+	} else {
+		shim.Error("Not Suported chaincode function")
+	}
+
+	if err != nil {
+		return shim.Error(err.Error())
+	}
+	return shim.Success([]byte(result))
+}
+
+func get(stub shim.ChaincodeStubInterface, args []string) (string, error) {
+	if len(args) != 1 {
+		return "", fmt.Errorf("Incorrect arguments")
+	}
+
+	value, err := stub.GetState(args[0])
+
+	if err != nil {
+		return "", fmt.Errorf("Failed to get asset")
+	}
+	if value == nil {
+		return "", fmt.Errorf("Asset not found")
+	}
+	return string(value), nil
+}
+
+func set(stub shim.ChaincodeStubInterface, args []string) (string, error) {
+	if len(args) != 2 {
+		return "", fmt.Errorf("Incorrect arguments")
+	}
+
+	var data = Data{Key: args[0], Value: args[1]}
+	dataAsBytes, _ := json.Marshal(data)
+	err := stub.PutState(args[0], dataAsBytes)
+
+	if err != nil {
+		return "", fmt.Errorf("Failed to set asset")
+	}
+
+	return string(dataAsBytes), nil
+
+}
+
+func getAllKeys(stub shim.ChaincodeStubInterface, args []string) (string, error) {
+
+	startKey := "ASSET0"
+	endKey := "ASSET999"
+
+	iter, err := stub.GetStateByRange(startKey, endKey)
+	if err != nil {
+		return "", fmt.Errorf("Failed to get all keys")
+	}
+	defer iter.Close()
+
+	var buffer string
+	buffer = "["
+
+	comma := false
+	for iter.HasNext() {
+		res, err := iter.Next()
+		if err != nil {
+			return "", fmt.Errorf("%s", err)
+		}
+		if comma == true {
+			buffer += ","
+		}
+		buffer += string(res.Value)
+
+		comma = true
+	}
+	buffer += "]"
+
+	fmt.Println(buffer)
+
+	return string(buffer), nil
+
+}
+
+func getHistoryForKey(stub shim.ChaincodeStubInterface, args []string) (string, error) {
+
+	if len(args) < 1 {
+		return "", fmt.Errorf("Incorrect number of arguments. Expecting 1")
+	}
+	keyName := args[0]
+	// 로그 남기기
+	fmt.Println("getHistoryForKey:" + keyName)
+
+	resultsIterator, err := stub.GetHistoryForKey(keyName)
+	if err != nil {
+		return "", err
+	}
+	defer resultsIterator.Close()
+
+	// buffer is a JSON array containing historic values for the marble
+	var buffer bytes.Buffer
+	buffer.WriteString("[")
+
+	bArrayMemberAlreadyWritten := false
+	for resultsIterator.HasNext() {
+		response, err := resultsIterator.Next()
+		if err != nil {
+			return "", err
+		}
+		if bArrayMemberAlreadyWritten == true {
+			buffer.WriteString(",")
+		}
+		buffer.WriteString("{\"TxId\":")
+		buffer.WriteString("\"")
+		buffer.WriteString(response.TxId)
+		buffer.WriteString("\"")
+		buffer.WriteString(", \"Value\":")
+		if response.IsDelete {
+			buffer.WriteString("null")
+		} else {
+			buffer.WriteString(string(response.Value))
+		}
+
+		buffer.WriteString(", \"Timestamp\":")
+		buffer.WriteString("\"")
+		buffer.WriteString(time.Unix(response.Timestamp.Seconds, int64(response.Timestamp.Nanos)).String())
+		buffer.WriteString("\"")
+
+		buffer.WriteString(", \"IsDelete\":")
+		buffer.WriteString("\"")
+		buffer.WriteString(strconv.FormatBool(response.IsDelete))
+		buffer.WriteString("\"")
+		buffer.WriteString("}")
+		bArrayMemberAlreadyWritten = true
+	}
+	buffer.WriteString("]")
+
+	// 로그 남기기
+	fmt.Println("getHistoryForKey returning:\n" + buffer.String() + "\n")
+
+	return (string)(buffer.Bytes()), nil
+}
+
+func main() {
+	// Create a new Smart Contract
+	err := shim.Start(new(SimpleAsset))
+	if err != nil {
+		fmt.Printf("Error creating new Smart Contract: %s", err)
+	}
+}
