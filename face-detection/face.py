@@ -10,7 +10,6 @@ while True:
     ret, frame = cap.read()
     
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    
 
     faces = face_cascade.detectMultiScale(gray, 1.1, 4)
     for (x, y, w, h) in faces:
